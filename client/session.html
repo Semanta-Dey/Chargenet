@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChargeNet - Active Session</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/styles.css">
+    <style>
+        .session-card {
+            margin: auto !important;
+            padding: 2rem !important;
+            flex-shrink: 0 !important;
+        }
+        .session-card h2 {
+            margin-bottom: 1.5rem !important;
+        }
+        .progress-container {
+            margin: 0 auto 1.5rem !important;
+        }
+        .stats-grid {
+            margin-bottom: 1.5rem !important;
+        }
+        .cost-display {
+            margin-bottom: 1.5rem !important;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-bolt-lightning"></i>
+            <span>ChargeNet</span>
+        </div>
+        <div class="nav-right">
+            <span id="userNameDisplay" style="color:var(--text-muted);font-size:.9rem;"></span>
+            <div class="user-badge">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <a href="#" class="logout-btn" id="logoutBtn">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                Logout
+            </a>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <aside>
+            <nav>
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fa-solid fa-house-chimney-window"></i>
+                    Dashboard
+                </a>
+                <a href="station.html" class="nav-link">
+                    <i class="fa-solid fa-charging-station"></i>
+                    Stations
+                </a>
+                <a href="bookings.html" class="nav-link">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    Bookings
+                </a>
+                <a href="session.html" class="nav-link active">
+                    <i class="fa-solid fa-bolt"></i>
+                    My Sessions
+                </a>
+                <a href="history.html" class="nav-link">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    History
+                </a>
+            </nav>
+        </aside>
+
+        <main style="display: flex; align-items: center; justify-content: flex-start; flex-direction: column; overflow-y: auto;">
+            <!-- Toast Notification Container -->
+            <div id="toastContainer" class="toast-container"></div>
+
+            <!-- ===== ACTIVE CHARGING SESSION ===== -->
+            <div class="session-card" id="activeSessionCard" style="display:none; margin-bottom: 2rem;">
+                <div class="title">Active Charging Session</div>
+                <h2 id="sessionStationName">Downtown Hub</h2>
+
+                <div class="progress-container">
+                    <div class="progress-ring" id="sessionProgressRing">
+                        <div class="progress-content">
+                            <div class="time" id="sessionTimer">00:00:00</div>
+                            <div class="charging-text">
+                                <i class="fa-solid fa-bolt-lightning"></i>
+                                Charging
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <i class="fa-solid fa-battery-three-quarters"></i>
+                        <span class="stat-val" id="sessionBattery">20%</span>
+                        <span class="stat-label">Battery</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fa-solid fa-bolt"></i>
+                        <span class="stat-val" id="sessionPower">120 kW</span>
+                        <span class="stat-label">Rate</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fa-solid fa-wave-square"></i>
+                        <span class="stat-val" id="sessionEnergy">0.0 kWh</span>
+                        <span class="stat-label">Energy</span>
+                    </div>
+                </div>
+
+                <div class="cost-display">
+                    <div class="cost-label">Current Cost</div>
+                    <div class="cost-val" id="sessionCost">$0.00</div>
+                </div>
+
+                <!-- Active Limits Display -->
+                <div id="sessionLimitsDisplay" style="display:none; background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.15); border-radius: 12px; padding: 12px; margin-bottom: 1.5rem; text-align: left;">
+                    <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em;">Session Limits</div>
+                    <div style="display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem;">
+                        <div id="limitDurationRow" style="display: none; justify-content: space-between;"><span style="color: var(--text-muted);"><i class="fa-solid fa-clock" style="margin-right: 5px;"></i> Duration Limit:</span><span id="limitDurationVal" style="font-weight: 600; color: var(--primary-color);">20 Minutes</span></div>
+                        <div id="limitCostRow" style="display: none; justify-content: space-between;"><span style="color: var(--text-muted);"><i class="fa-solid fa-dollar-sign" style="margin-right: 5px;"></i> Cost Limit:</span><span id="limitCostVal" style="font-weight: 600; color: var(--success);">$15.00</span></div>
+                    </div>
+                </div>
+
+                <button class="btn btn-stop" id="stopChargingBtn" style="border:none; cursor:pointer; display:block; width:100%;">Stop Charging</button>
+            </div>
+
+            <!-- ===== SESSION COMPLETED RECEIPT ===== -->
+            <div class="session-card" id="sessionReceiptCard" style="display:none; max-width: 440px;">
+                <div class="title" style="color: var(--success); font-weight:700;"><i class="fa-solid fa-circle-check"></i> Charging Completed</div>
+                <h2 id="receiptStationName">Downtown Hub</h2>
+                <div style="font-size: 3rem; font-weight:800; color: white; margin: 1.5rem 0;" id="receiptCost">$0.00</div>
+                <div class="cost-label" style="margin-bottom: 2rem;">Total Cost Charged</div>
+
+                <div style="background: rgba(15,23,42,0.4); border:1px solid var(--border-color); border-radius:12px; padding:1.25rem; margin-bottom:2rem; text-align:left;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--text-muted)">Duration:</span><span id="receiptDuration" style="font-weight:600;">00:00:00</span></div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--text-muted)">Energy Delivered:</span><span id="receiptEnergy" style="font-weight:600;">0 kWh</span></div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:var(--text-muted)">Charger Rate:</span><span id="receiptRate" style="font-weight:600;">0.45/kWh</span></div>
+                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted)">Session ID:</span><span id="receiptSessionId" style="font-size:0.8rem; font-family:monospace; color:var(--text-muted);">#00000</span></div>
+                </div>
+
+                <button class="btn btn-primary" id="payBtn" style="display:block; width:100%; border:none; cursor:pointer;">Pay Online</button>
+                <button class="btn btn-outline" id="backToSessionsBtn" onclick="window.location.href='session.html'" style="display:block; width:100%; border:none; cursor:pointer; margin-top: 10px;">Back to My Sessions</button>
+            </div>
+
+            <!-- ===== NO ACTIVE SESSION CARD ===== -->
+            <div class="session-card" id="noActiveSessionCard" style="display:none; text-align: center; max-width: 440px;">
+                <i class="fa-solid fa-plug" style="font-size: 3.5rem; color: var(--text-muted); margin-bottom: 1.5rem; display: block;"></i>
+                <h2>No Active Session</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.5;">You do not have any active charging session at the moment. Find a charging station to start charging or book a slot.</p>
+                <a href="station.html" class="btn btn-primary" style="display: inline-block; width: 100%; text-decoration: none; line-height: 2.5rem;">Find Stations</a>
+            </div>
+        </main>
+    </div>
+
+</body>
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+
+    <script src="./js/auth.js"></script>
+    <script src="./js/session.js"></script>
+</html>

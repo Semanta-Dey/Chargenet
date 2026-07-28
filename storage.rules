@@ -1,0 +1,10 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Stations folder rules
+    match /stations/{allPaths=**} {
+      allow read: if true; // Publicly accessible to display on station cards
+      allow write, delete: if request.auth != null; // Restrict uploads to authenticated accounts
+    }
+  }
+}

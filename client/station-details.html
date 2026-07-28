@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChargeNet - Station Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-bolt-lightning"></i>
+            <span>ChargeNet</span>
+        </div>
+        <div class="nav-right">
+            <span id="userNameDisplay" style="color:var(--text-muted);font-size:.9rem;"></span>
+            <div class="user-badge">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <a href="#" class="logout-btn" id="logoutBtn">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                Logout
+            </a>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <aside>
+            <nav>
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fa-solid fa-house-chimney-window"></i>
+                    Dashboard
+                </a>
+                <a href="station.html" class="nav-link active">
+                    <i class="fa-solid fa-charging-station"></i>
+                    Stations
+                </a>
+                <a href="bookings.html" class="nav-link">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    Bookings
+                </a>
+                <a href="session.html" class="nav-link">
+                    <i class="fa-solid fa-bolt"></i>
+                    My Sessions
+                </a>
+                <a href="history.html" class="nav-link">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    History
+                </a>
+            </nav>
+        </aside>
+
+        <main>
+            <a href="station.html" class="back-link">
+                <i class="fa-solid fa-arrow-left"></i>
+                Back to Stations
+            </a>
+
+            <div class="station-hero">
+                <img id="stationHeroImg" src="./assets/images/station_hub_1776618964384.png" alt="Station Image" class="hero-img">
+                <div class="hero-overlay">
+                    <div class="hero-info">
+                        <h1 id="stationDetailName">Loading...</h1>
+                        <p><i class="fa-solid fa-location-dot"></i> <span id="stationDetailAddress">Loading...</span></p>
+                    </div>
+                    <div class="ports-banner" id="stationPortsBanner">
+                        <i class="fa-solid fa-circle" style="font-size: 0.5rem; margin-right: 5px;"></i> Loading...
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-cards">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fa-solid fa-plug"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="label">Charger Type</div>
+                        <div class="value" id="detailChargerType">Loading...</div>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="label">Max Power</div>
+                        <div class="value" id="detailMaxPower">Loading...</div>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fa-solid fa-tag"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="label">Price Rate</div>
+                        <div class="value" id="detailPriceRate">Loading...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Facilities Section -->
+            <div class="facilities-section" id="detailFacilitiesSection" style="display:none; margin-bottom: 2rem; background: var(--card-bg); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: var(--radius-lg);">
+                <h3 style="margin-bottom: 1rem; font-size: 1.1rem; font-weight: 600; color: var(--text-main);"><i class="fa-solid fa-circle-info" style="color: var(--primary-color); margin-right: 8px;"></i> Available Facilities</h3>
+                <div id="detailFacilitiesContainer" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
+            </div>
+
+            <div class="ports-section">
+                <div class="ports-header">
+                    <h2>Available Ports</h2>
+                    <span id="detailTotalPortsLabel" style="color: var(--text-muted); font-size: 0.9rem;">6 Total Ports</span>
+                </div>
+
+                <div class="port-list" id="portListContainer">
+                    <!-- Ports will load dynamically -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ===== BOOKING MODAL ===== -->
+    <div id="bookingModal" class="modal-overlay">
+        <div class="modal" style="max-width: 440px;">
+            <style>
+                #bookingForm .form-input, #liveChargeForm .form-input {
+                    color: var(--text-main) !important;
+                    background: rgba(15, 23, 42, 0.6) !important;
+                    border: 1px solid var(--border-color) !important;
+                    border-radius: 10px !important;
+                    padding: 12px 16px !important;
+                    font-size: 0.95rem !important;
+                    outline: none !important;
+                    transition: all 0.3s ease !important;
+                }
+                #bookingForm .form-input:focus, #liveChargeForm .form-input:focus {
+                    border-color: var(--primary-color) !important;
+                    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+                    background: rgba(15, 23, 42, 0.85) !important;
+                }
+                #bookingForm select, #liveChargeForm select {
+                    cursor: pointer !important;
+                }
+                #bookingForm select option, #liveChargeForm select option {
+                    background: var(--bg-surface) !important;
+                    color: var(--text-main) !important;
+                }
+                #bookingForm input[type="date"]::-webkit-calendar-picker-indicator,
+                #bookingForm input[type="time"]::-webkit-calendar-picker-indicator {
+                    filter: invert(1) hue-rotate(180deg) brightness(1.5);
+                    cursor: pointer;
+                }
+            </style>
+            <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border-color); padding-bottom:1rem; margin-bottom:1.5rem;">
+                <h2 style="margin:0;"><i class="fa-solid fa-calendar-check" style="color:var(--primary-color); margin-right:8px;"></i> Book Slot</h2>
+                <button class="modal-close" id="closeBookingModalBtn" style="background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="bookingForm">
+                    <div class="form-group" style="margin-bottom: 1.25rem;">
+                        <label for="bookingDate" style="display:block; margin-bottom:6px; font-size:0.85rem; color:var(--text-muted);">Select Date *</label>
+                        <input type="date" id="bookingDate" class="form-input" style="width:100%;" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1.25rem;">
+                        <label for="bookingTime" style="display:block; margin-bottom:6px; font-size:0.85rem; color:var(--text-muted);">Select Time *</label>
+                        <input type="time" id="bookingTime" class="form-input" style="width:100%;" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1.25rem;">
+                        <label for="bookingChargerType" style="display:block; margin-bottom:6px; font-size:0.85rem; color:var(--text-muted);">Charger Type *</label>
+                        <select id="bookingChargerType" class="form-input" style="width:100%; color:var(--text-main); background:rgba(15,23,42,0.5);" required>
+                            <option value="AC">AC Charger</option>
+                            <option value="DC">DC Fast Charger</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1.25rem;">
+                        <label for="bookingDuration" style="display:block; margin-bottom:6px; font-size:0.85rem; color:var(--text-muted);">Charging Duration *</label>
+                        <select id="bookingDuration" class="form-input" style="width:100%; color:var(--text-main); background:rgba(15,23,42,0.5);" required>
+                            <option value="1">1 Hour</option>
+                            <option value="2">2 Hours</option>
+                            <option value="3">3 Hours</option>
+                            <option value="4">4 Hours</option>
+                            <option value="5">5 Hours</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:10px; border-top: 1px solid var(--border-color); padding-top:1.25rem; margin-top:1.5rem;">
+                <button class="btn btn-outline" id="cancelBookingBtn" style="padding:10px 20px;">Cancel</button>
+                <button class="btn btn-primary" id="confirmBookingBtn" style="width:auto; padding:10px 24px;">Confirm Booking</button>
+            </div>
+        </div>
+    </div>
+    <!-- ===== LIVE CHARGING LIMITS MODAL ===== -->
+    <div id="liveChargeModal" class="modal-overlay">
+        <div class="modal" style="max-width: 440px;">
+            <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border-color); padding-bottom:1rem; margin-bottom:1.5rem;">
+                <h2 style="margin:0;"><i class="fa-solid fa-bolt" style="color:var(--success); margin-right:8px;"></i> Start Charging</h2>
+                <button class="modal-close" id="closeLiveChargeModalBtn" style="background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.25rem; line-height:1.4;">Configure optional limiters for your charging session. The charging will stop automatically once either limit is reached or the battery is fully charged (100%).</p>
+                <form id="liveChargeForm">
+                    <style>
+                        #liveChargeForm select:focus, #liveChargeForm input:focus {
+                            border-color: var(--primary-color) !important;
+                            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+                            background: rgba(15, 23, 42, 0.8) !important;
+                        }
+                    </style>
+                    <div class="form-group" style="margin-bottom: 1.25rem;">
+                        <label for="chargeDurationLimit" style="display:block; margin-bottom:8px; font-size:0.85rem; font-weight: 500; color:var(--text-muted);"><i class="fa-solid fa-clock" style="margin-right: 5px; color: var(--primary-color);"></i> Duration Limit (Optional)</label>
+                        <select id="chargeDurationLimit" class="form-input" style="width:100%; color:var(--text-main); background:rgba(15,23,42,0.6); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 14px; font-size: 0.9rem; outline: none; cursor: pointer; transition: all 0.2s;">
+                            <option value="">No Time Limit</option>
+                            <option value="0.3333">20 Seconds (Demo)</option>
+                            <option value="1">1 Minute (Demo)</option>
+                            <option value="2">2 Minutes (Demo)</option>
+                            <option value="20">20 Minutes</option>
+                            <option value="30">30 Minutes</option>
+                            <option value="45">45 Minutes</option>
+                            <option value="60">1 Hour</option>
+                            <option value="120">2 Hours</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1.25rem;">
+                        <label for="chargeCostLimit" style="display:block; margin-bottom:8px; font-size:0.85rem; font-weight: 500; color:var(--text-muted);"><i class="fa-solid fa-dollar-sign" style="margin-right: 5px; color: var(--success);"></i> Cost Limit (Optional)</label>
+                        <div style="position: relative; display: flex; align-items: center;">
+                            <span style="position: absolute; left: 14px; color: var(--text-muted); font-size: 0.95rem; font-weight: 600;">$</span>
+                            <input type="number" step="0.01" min="0.01" id="chargeCostLimit" class="form-input" style="width:100%; padding-left: 32px; padding-right: 14px; padding-top: 10px; padding-bottom: 10px; color:var(--text-main); background:rgba(15,23,42,0.6); border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; outline: none; transition: all 0.2s;" placeholder="e.g. 15.00">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:10px; border-top: 1px solid var(--border-color); padding-top:1.25rem; margin-top:1.5rem;">
+                <button class="btn btn-outline" id="cancelLiveChargeBtn" style="padding:10px 20px;">Cancel</button>
+                <button class="btn btn-primary" id="confirmLiveChargeBtn" style="width:auto; padding:10px 24px; background: linear-gradient(135deg, #10B981, #059669); border: none;">Start Session</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+</body>
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+
+    <script src="./js/auth.js"></script>
+    <script src="./js/booking.js"></script>
+</html>

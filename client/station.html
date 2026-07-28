@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChargeNet - All Stations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-bolt-lightning"></i>
+            <span>ChargeNet</span>
+        </div>
+        <div class="nav-right">
+            <span id="userNameDisplay" style="color:var(--text-muted);font-size:.9rem;"></span>
+            <div class="user-badge">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <a href="#" class="logout-btn" id="logoutBtn">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                Logout
+            </a>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <aside>
+            <nav>
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fa-solid fa-house-chimney-window"></i>
+                    Dashboard
+                </a>
+                <a href="station.html" class="nav-link active">
+                    <i class="fa-solid fa-charging-station"></i>
+                    Stations
+                </a>
+                <a href="bookings.html" class="nav-link">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    Bookings
+                </a>
+                <a href="session.html" class="nav-link">
+                    <i class="fa-solid fa-bolt"></i>
+                    My Sessions
+                </a>
+                <a href="history.html" class="nav-link">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    History
+                </a>
+            </nav>
+        </aside>
+
+        <main>
+            <div class="content-header" style="margin-bottom: 2rem;">
+                <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 1.5rem;">Charging Stations</h1>
+                
+                <div class="table-toolbar" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+                    <style>
+                        #stationSearchInput:focus, .filter-group select:focus {
+                            border-color: var(--primary-color) !important;
+                            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+                            background: rgba(15, 23, 42, 0.8) !important;
+                        }
+                        #stationSearchInput:hover, .filter-group select:hover {
+                            border-color: rgba(255, 255, 255, 0.15) !important;
+                        }
+                    </style>
+                    <div class="search-box" style="flex: 1; min-width: 280px; position: relative;">
+                        <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--primary-color); z-index: 10; font-size: 1rem;"></i>
+                        <input type="text" id="stationSearchInput" placeholder="Search by station name or city..." class="form-input" style="padding-left: 48px; width: 100%; height: 48px; background: rgba(15,23,42,0.6); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-main); font-size: 0.9rem; outline: none; transition: all 0.2s;">
+                    </div>
+                    <div class="filter-group" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                        <select id="filterCity" class="form-input" style="width: auto; height: 48px; background: rgba(15,23,42,0.6); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-main); padding: 0 16px; cursor: pointer; transition: all 0.2s; font-size: 0.85rem; outline: none;">
+                            <option value="" style="background: var(--bg-surface); color: var(--text-main);">All Cities</option>
+                        </select>
+                        <select id="filterType" class="form-input" style="width: auto; height: 48px; background: rgba(15,23,42,0.6); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-main); padding: 0 16px; cursor: pointer; transition: all 0.2s; font-size: 0.85rem; outline: none;">
+                            <option value="" style="background: var(--bg-surface); color: var(--text-main);">All Types</option>
+                            <option value="AC" style="background: var(--bg-surface); color: var(--text-main);">AC</option>
+                            <option value="DC" style="background: var(--bg-surface); color: var(--text-main);">DC</option>
+                        </select>
+                        <select id="filterStatus" class="form-input" style="width: auto; height: 48px; background: rgba(15,23,42,0.6); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-main); padding: 0 16px; cursor: pointer; transition: all 0.2s; font-size: 0.85rem; outline: none;">
+                            <option value="" style="background: var(--bg-surface); color: var(--text-main);">All Statuses</option>
+                            <option value="Available" style="background: var(--bg-surface); color: var(--text-main);">Available</option>
+                            <option value="Busy" style="background: var(--bg-surface); color: var(--text-main);">Busy</option>
+                            <option value="Maintenance" style="background: var(--bg-surface); color: var(--text-main);">Maintenance</option>
+                            <option value="Offline" style="background: var(--bg-surface); color: var(--text-main);">Offline</option>
+                        </select>
+                        <select id="sortBy" class="form-input" style="width: auto; height: 48px; background: rgba(15,23,42,0.6); border: 1px solid var(--border-color); border-radius: 10px; color: var(--text-main); padding: 0 16px; cursor: pointer; transition: all 0.2s; font-size: 0.85rem; outline: none;">
+                            <option value="latest" style="background: var(--bg-surface); color: var(--text-main);">Sort: Latest</option>
+                            <option value="power-desc" style="background: var(--bg-surface); color: var(--text-main);">Sort: Power (High-Low)</option>
+                            <option value="power-asc" style="background: var(--bg-surface); color: var(--text-main);">Sort: Power (Low-High)</option>
+                            <option value="price-asc" style="background: var(--bg-surface); color: var(--text-main);">Sort: Price (Low-High)</option>
+                            <option value="price-desc" style="background: var(--bg-surface); color: var(--text-main);">Sort: Price (High-Low)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <section class="station-section">
+                <div class="station-grid" id="stationGrid">
+                    <!-- Stations will load dynamically -->
+                </div>
+                <div id="stationEmptyState" class="empty-state" style="display:none; text-align: center; padding: 3rem;">
+                    <i class="fa-solid fa-charging-station" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                    <h3>No stations match your filters</h3>
+                    <p>Try resetting the search or filter settings.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+</body>
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+
+    <script src="./js/auth.js"></script>
+    <script src="./js/station.js"></script>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChargeNet - Charging History</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-bolt-lightning"></i>
+            <span>ChargeNet</span>
+        </div>
+        <div class="nav-right">
+            <span id="userNameDisplay" style="color:var(--text-muted);font-size:.9rem;"></span>
+            <div class="user-badge">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <a href="#" class="logout-btn" id="logoutBtn">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                Logout
+            </a>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <aside>
+            <nav>
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fa-solid fa-house-chimney-window"></i>
+                    Dashboard
+                </a>
+                <a href="station.html" class="nav-link">
+                    <i class="fa-solid fa-charging-station"></i>
+                    Stations
+                </a>
+                <a href="bookings.html" class="nav-link">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    Bookings
+                </a>
+                <a href="session.html" class="nav-link">
+                    <i class="fa-solid fa-bolt"></i>
+                    My Sessions
+                </a>
+                <a href="history.html" class="nav-link active">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    History
+                </a>
+            </nav>
+        </aside>
+
+        <main style="display: flex; align-items: center; justify-content: flex-start; flex-direction: column; overflow-y: auto;">
+            <!-- Toast Notification Container -->
+            <div id="toastContainer" class="toast-container"></div>
+
+            <!-- ===== CHARGING HISTORY ===== -->
+            <div id="historySection" style="width:100%; max-width: 1000px; padding: 2rem 0;">
+                <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 2rem;">Charging History</h1>
+                <div id="historyTableWrapper" style="display:none; overflow-x:auto; background: var(--card-bg); backdrop-filter: var(--glass-blur); border-radius: var(--radius-lg); border: 1px solid var(--border-color); padding: 1.5rem;">
+                    <table class="stations-table">
+                        <thead>
+                            <tr>
+                                <th>Station</th>
+                                <th>Date & Time</th>
+                                <th>Charger Type</th>
+                                <th>Duration</th>
+                                <th>Energy (kWh)</th>
+                                <th>Cost</th>
+                                <th>Paid</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody"></tbody>
+                    </table>
+                </div>
+                <div id="historyEmptyState" class="empty-state" style="display:none; text-align: center; padding: 3rem;">
+                    <i class="fa-solid fa-clock-rotate-left" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                    <h3>No Completed Sessions Yet</h3>
+                    <p>Start a charging session from your approved bookings.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+
+    <script src="./js/auth.js"></script>
+    <script src="./js/history-list.js"></script>
+</html>
